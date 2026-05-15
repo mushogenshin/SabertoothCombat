@@ -12,6 +12,11 @@ ACombatCharacterBase::ACombatCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+	// Add the ability system component
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	// AbilitySystemComponent->SetIsReplicated(true);
+	// AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	
 	// // Set size for collision capsule
 	// GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
 
@@ -41,6 +46,24 @@ void ACombatCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ACombatCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+}
+
+void ACombatCharacterBase::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
 }
 
 // Called every frame
