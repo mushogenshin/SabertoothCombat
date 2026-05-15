@@ -16,6 +16,8 @@ class COMBAT_API UBasicAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 	
 public:
+	UBasicAttributeSet();
+	
 	// Health Attributes
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Health;

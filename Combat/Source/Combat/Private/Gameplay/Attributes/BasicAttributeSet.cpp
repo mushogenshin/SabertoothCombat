@@ -3,3 +3,10 @@
 
 #include "Gameplay/Attributes/BasicAttributeSet.h"
 
+UBasicAttributeSet::UBasicAttributeSet()
+{
+	Health = 100.f;
+	MaxHealth = 100.f;
+	Stamina = 100.f;
+	MaxStamina = 100.f;
+}
