@@ -2,6 +2,7 @@
 
 
 #include "Gameplay/Attributes/BasicAttributeSet.h"
+#include "GameplayEffectExtension.h"
 
 UBasicAttributeSet::UBasicAttributeSet()
 {
@@ -19,11 +20,28 @@ void UBasicAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 void UBasicAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
+	
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	} else if (Attribute == GetStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxStamina());	
+	} 
 }
 
 void UBasicAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+	
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(GetHealth());
+	} 
+	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(GetStamina());
+	}
 }
 
 void UBasicAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
