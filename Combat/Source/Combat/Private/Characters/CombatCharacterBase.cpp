@@ -3,6 +3,7 @@
 
 #include "Characters/CombatCharacterBase.h"
 #include "Components/CapsuleComponent.h"
+#include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Gameplay/Attributes/BasicAttributeSet.h"
 
@@ -82,6 +83,23 @@ void ACombatCharacterBase::Tick(float DeltaTime)
 void ACombatCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
+	auto* EIC = Cast<UEnhancedInputComponent>(InputComponent);
+	if (BiteAttackInput)
+	{
+		EIC->BindAction(BiteAttackInput, ETriggerEvent::Started,   this, &ACombatCharacterBase::XuLyAttack_Bite);
+		// EIC->BindAction(BiteAttackInput, ETriggerEvent::Completed, this, &XULYATTACK_BITE_END);
+	}
+	
+	if (ClawAttackInput)
+	{
+		// EIC->BindAction(ClawAttackInput, ETriggerEvent::Started,   this, &XULYATTACK_CLAW_START);
+		// EIC->BindAction(ClawAttackInput, ETriggerEvent::Completed, this, &XULYATTACK_CLAW_END);
+	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ACombatCharacterBase::XuLyAttack_Bite()
+{
+	AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EMyAbilityInputID::BiteAttack));
+}

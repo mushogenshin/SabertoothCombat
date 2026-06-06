@@ -7,8 +7,19 @@
 #include "GameFramework/Character.h"
 #include "CombatCharacterBase.generated.h"
 
+class UInputAction;
 class UBasicAttributeSet;
 class UAbilitySystemComponent;
+
+UENUM(BlueprintType)
+enum class EMyAbilityInputID : uint8
+{
+	None,
+	Confirm,
+	Cancel,
+	BiteAttack,
+	ClawAttack,
+};
 
 UCLASS()
 class COMBAT_API ACombatCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -27,6 +38,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	UBasicAttributeSet* BasicAttributeSet;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AbilitySystem|Input")
+	TObjectPtr<UInputAction> BiteAttackInput;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AbilitySystem|Input")
+	TObjectPtr<UInputAction> ClawAttackInput;
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,11 +52,13 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void OnRep_PlayerState() override;
+	
+	void XuLyAttack_Bite();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
