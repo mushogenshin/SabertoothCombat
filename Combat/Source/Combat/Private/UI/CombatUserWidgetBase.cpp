@@ -13,9 +13,29 @@ void UCombatUserWidgetBase::NativeConstruct()
 		// Khi bam nut close, phai co j do xay ra
 		NutBamDongUI->OnClicked.AddDynamic(this, &UCombatUserWidgetBase::DepTiemUIThoi);
 	}
+	
+	// bIsFocusable = true; // UE 5.2
+	SetIsFocusable(true);
+	SetKeyboardFocus();
+}
+
+FReply UCombatUserWidgetBase::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	// UE_LOG(LogTemp, Warning, TEXT("EM NHAN DUOC NUT BAM ROI NHA"));
+	// TODO: dismiss cai UI nay
+	DepTiemUIThoi();
+	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+}
+
+FReply UCombatUserWidgetBase::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	UE_LOG(LogTemp, Warning, TEXT("EM NHAN DUOC CLICK CHUOT"));
+	DepTiemUIThoi();
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
 void UCombatUserWidgetBase::DepTiemUIThoi()
 {
 	RemoveFromParent();
+	TatHDDuocRoiDo.Broadcast();
 }
